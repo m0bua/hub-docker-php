@@ -13,11 +13,7 @@ RUN DISTRO="$(cat /etc/os-release | grep -E ^ID= | cut -d = -f 2)"; \
 
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 
-RUN ext="bcmath bz2 calendar exif intl gd ldap memcached OPcache pdo_mysql pdo_pgsql pgsql redis soap xsl zip sockets imagick"; \
-  php="$(php -v | grep -o -E '[0-9.]+' | head -n 1)"; \
-  v="${php}\n7.2"; if [[ "`printf ${v}`" != "`printf ${v} | sort -V`" ]]; then ext="$ext mcrypt";fi; \
-  v="${php}\n7"; if [[ "`printf ${v}`" != "`printf ${v} | sort -V`" ]]; then ext="$ext mysqli";fi; \
-  install-php-extensions "$ext";
+RUN install-php-extensions bcmath mcrypt bz2 calendar exif intl gd imagick ldap memcached OPcache mysqli pdo pdo_mysql pdo_pgsql pgsql redis soap xsl zip sockets ;
 
 ENV PATH=$PATH:/root/composer/vendor/bin COMPOSER_ALLOW_SUPERUSER=1
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
